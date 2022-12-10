@@ -1,5 +1,6 @@
 import React from 'react'
 import { client, urlFor } from '../../lib/client'
+import Product from './../../components/Product'
 import {
   AiOutlineMinus,
   AiOutlinePlus,
@@ -8,7 +9,12 @@ import {
 } from 'react-icons/ai'
 
 const ProductDetails = ({ product, products }) => {
-  const { image, name, price, details } = product
+  const { name, price, details, image } = product
+  console.log(product)
+
+  const decQty = qty => {}
+  const incQty = qty => {}
+
   return (
     <div>
       <div className='product-detail-container'>
@@ -22,7 +28,7 @@ const ProductDetails = ({ product, products }) => {
             ))}
           </div> */}
         </div>
-        <div className='products-details-desc'>
+        <div className='product-details-desc'>
           <h1>{name}</h1>
           <div className='reviews'>
             <div>
@@ -32,6 +38,41 @@ const ProductDetails = ({ product, products }) => {
               <AiFillStar />
               <AiOutlineStar />
             </div>
+            <p>(20)</p>
+          </div>
+          <h4>Details: </h4>
+          <p>{details}</p>
+          <p className='price'>${price}</p>
+          <div className='quantity'>
+            <h3>Quantity: </h3>
+            <p className='quantity-desc'>
+              <span className='minus' onClick={decQty}>
+                <AiOutlineMinus />
+              </span>
+              <span className='num'>0</span>
+              <span className='plus' onClick={incQty}>
+                <AiOutlinePlus />
+              </span>
+            </p>
+          </div>
+          <div className='buttons'>
+            <button type='button' className='add-to-cart'>
+              Add to Cart
+            </button>
+            <button type='button' className='buy-now'>
+              Buy Now
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className='maylike-products-wrapper'>
+        <h2>You may also like</h2>
+        <div className='marquee'>
+          <div className='maylike-products-container'>
+            {products.map(item => (
+              <Product />
+            ))}
           </div>
         </div>
       </div>

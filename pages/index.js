@@ -6,11 +6,10 @@ import { client } from '../lib/client'
 export default function Home ({ products, bannerData }) {
   return (
     <>
-      
       <div>
         <HeroBanner heroBanner={bannerData.length && bannerData[0]} />
         <div className='products-heading'>
-          <h2>Best Selling Products</h2>
+          <h2>Best Selling Products...</h2>
           <p>Speakers of many variations</p>
         </div>
         <div className='products-container'>

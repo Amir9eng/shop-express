@@ -1,6 +1,4 @@
-import React from 'react'
-import { client, urlFor } from '../../lib/client'
-import Product from './../../components/Product'
+import React, { useState } from 'react'
 import {
   AiOutlineMinus,
   AiOutlinePlus,
@@ -8,27 +6,44 @@ import {
   AiOutlineStar
 } from 'react-icons/ai'
 
-const ProductDetails = ({ product, products }) => {
-  const { name, price, details, image } = product
-  console.log(product)
+import { client, urlFor } from '../../lib/client'
+import { Product } from '../../components'
 
-  const decQty = qty => {}
-  const incQty = qty => {}
+const ProductDetails = ({ product, products }) => {
+  const { image, name, details, price } = product
+  const [index, setIndex] = useState(0)
+
+  const handleBuyNow = () => {
+    onAdd(product, qty)
+
+    setShowCart(true)
+  }
 
   return (
     <div>
       <div className='product-detail-container'>
         <div>
           <div className='image-container'>
-            <img src={urlFor(image && image[0])} alt='' />
+            <img
+              src={urlFor(image && image[index])}
+              className='product-detail-image'
+            />
           </div>
-          {/* <div className='small-images-container'>
+          <div className='small-images-container'>
             {image?.map((item, i) => (
-              <img src={urlFor(item)} className='' onMouseEnter={``} />
+              <img
+                key={i}
+                src={urlFor(item)}
+                className={
+                  i === index ? 'small-image selected-image' : 'small-image'
+                }
+                onMouseEnter={() => setIndex(i)}
+              />
             ))}
-          </div> */}
+          </div>
         </div>
-        <div className='product-details-desc'>
+
+        <div className='product-detail-desc'>
           <h1>{name}</h1>
           <div className='reviews'>
             <div>
@@ -44,22 +59,26 @@ const ProductDetails = ({ product, products }) => {
           <p>{details}</p>
           <p className='price'>${price}</p>
           <div className='quantity'>
-            <h3>Quantity: </h3>
+            <h3>Quantity:</h3>
             <p className='quantity-desc'>
-              <span className='minus' onClick={decQty}>
+              <span className='minus' onClick={``}>
                 <AiOutlineMinus />
               </span>
               <span className='num'>0</span>
-              <span className='plus' onClick={incQty}>
+              <span className='plus' onClick={``}>
                 <AiOutlinePlus />
               </span>
             </p>
           </div>
           <div className='buttons'>
-            <button type='button' className='add-to-cart'>
+            <button
+              type='button'
+              className='add-to-cart'
+              onClick={() => onAdd(product, qty)}
+            >
               Add to Cart
             </button>
-            <button type='button' className='buy-now'>
+            <button type='button' className='buy-now' onClick={handleBuyNow}>
               Buy Now
             </button>
           </div>
@@ -69,9 +88,9 @@ const ProductDetails = ({ product, products }) => {
       <div className='maylike-products-wrapper'>
         <h2>You may also like</h2>
         <div className='marquee'>
-          <div className='maylike-products-container'>
+          <div className='maylike-products-container track'>
             {products.map(item => (
-              <Product />
+              <Product key={item._id} product={item} />
             ))}
           </div>
         </div>
@@ -80,8 +99,6 @@ const ProductDetails = ({ product, products }) => {
   )
 }
 
-export default ProductDetails
-
 export const getStaticPaths = async () => {
   const query = `*[_type == "product"] {
     slug {
@@ -89,6 +106,7 @@ export const getStaticPaths = async () => {
     }
   }
   `
+
   const products = await client.fetch(query)
 
   const paths = products.map(product => ({
@@ -106,12 +124,15 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async ({ params: { slug } }) => {
   const query = `*[_type == "product" && slug.current == '${slug}'][0]`
   const productsQuery = '*[_type == "product"]'
+
   const product = await client.fetch(query)
   const products = await client.fetch(productsQuery)
 
   console.log(product)
 
   return {
-    props: { product, products }
+    props: { products, product }
   }
 }
+
+export default ProductDetails

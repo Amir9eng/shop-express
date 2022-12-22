@@ -1,12 +1,15 @@
 import '../styles/globals.css'
 import React from 'react'
 import { Layout } from '../components'
+import { StateContext } from '../context/StateContext'
 
 function MyApp ({ Component, pageProps }) {
   return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
+    <StateContext>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </StateContext>
   )
 }
 export default MyApp

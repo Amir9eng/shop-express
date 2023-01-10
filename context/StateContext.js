@@ -21,21 +21,45 @@ export const StateContext = ({ children }) => {
     })
   }
 
+  // const onAdd = (product, quantity) => {
+  //   const itemInCart = cartItems.find(item => item._id === product._id)
+  //   setTotalPrice(prevTotalPrice => prevTotalPrice + product.price * quantity)
+  //   setTotalQuantity(prevTotalQuantity => prevTotalQuantity + quantity)
+  //   if (itemInCart) {
+  //     const updatedCartItems = cartItems.map(cartProduct => {
+  //       if (cartProduct._id === product._id)
+  //         return { ...cartProduct, quantity: cartProduct.quantity + quantity }
+  //     })
+  //     setCartItems(updatedCartItems)
+  //   } else {
+  //     product.quantity = quantity
+  //     setCartItems([...cartItems, { ...product }])
+  //   }
+  //   toast.success(`${qty} ${product.name} has been added to the cart.`)
+  // }
   const onAdd = (product, quantity) => {
-    const itemInCart = cartItems.find(item => item._id === product._id)
+    const checkProductInCart = cartItems.find(item => item._id === product._id)
+
     setTotalPrice(prevTotalPrice => prevTotalPrice + product.price * quantity)
-    setTotalQuantity(prevTotalQuantity => prevTotalQuantity + quantity)
-    if (itemInCart) {
+    setTotalQuantity(prevTotalQuantities => prevTotalQuantities + quantity)
+
+    if (checkProductInCart) {
       const updatedCartItems = cartItems.map(cartProduct => {
         if (cartProduct._id === product._id)
-          return { ...cartProduct, quantity: cartProduct.quantity + quantity }
+          return {
+            ...cartProduct,
+            quantity: cartProduct.quantity + quantity
+          }
       })
+
       setCartItems(updatedCartItems)
     } else {
       product.quantity = quantity
+
       setCartItems([...cartItems, { ...product }])
     }
-    toast.success(`${qty} ${product.name} has been added to the cart.`)
+
+    toast.success(`${qty} ${product.name} added to the cart.`)
   }
 
   return (
